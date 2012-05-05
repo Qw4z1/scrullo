@@ -1,0 +1,7 @@
+/*@charset 'utf-8';
+*/
+
+.badge.point-badge {
+	background-color: rgb(36, 120, 168) !important;
+	color: white !important;
+}
