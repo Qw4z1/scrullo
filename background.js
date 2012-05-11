@@ -23,6 +23,11 @@ if(typeof SC == 'undefined') {
 SC.renderCardNumberAndPointBadge = function() {
 	$('.list-card').each(function(){
 		
+		//Check if there is already cards
+		if($('.sc-card-number', this).length > 0){
+			return true;//continue
+		}
+
 		//Get card number and points
 		var card = $(this),
 		cardNumber = card.find('.list-card-title span').text(),
@@ -64,12 +69,18 @@ SC.pointBadge = {
 
 	}
 }
+SC.checkBoardURL = function() {
+	var regEx = /^https:\/\/trello.com\/board/;
+	return regEx.test(window.location.href);
+}
+if(SC.checkBoardURL) {
+	var t = window.setInterval(function(){
+		if($('.list').length > 0) {
+			window.setTimeout(function(){
+				SC.renderCardNumberAndPointBadge();
+				SC.popStateHandler();
+			}, 500);
+		}
+	}, 300);
+}
 
-var t = window.setInterval(function(){
-	if($('.list').length > 3) {
-		window.setTimeout(function(){
-			SC.renderCardNumberAndPointBadge();
-		}, 500);
-		clearInterval(t);
-	}
-}, 300);
