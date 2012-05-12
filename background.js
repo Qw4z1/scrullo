@@ -73,12 +73,60 @@ SC.checkBoardURL = function() {
 	var regEx = /^https:\/\/trello.com\/board/;
 	return regEx.test(window.location.href);
 }
+SC.createTabBtn = function() {
+	if($('#board-header .sc-tab').length > 0){
+		return false;
+	}
+	var tab = $('<div class=\'sc-tab intial\'><a>Burn-down chart</a></div>')[0];
+	$('#board-header .board-title').append(tab)
+	window.setTimeout(function(){ 
+		$(tab).addClass('final')
+		.removeClass('intial');
+		var showBurndDownChart = function(){
+			SC.showBurndDownChart(this);
+		}
+		$(tab).click(SC.showBurndDownChart);
+	}, 0);
+
+}
+SC.showBurndDownChart = function(HTML_OBJ) {
+	$('#sc-perspective-wrapper #sc-wrapper').addClass('half-hidden').removeClass('intial');
+	$('#sc-chart').addClass('revealed').removeClass('hidden');
+	$(HTML_OBJ).unbind();
+
+}
+SC.wrapBody = function() {
+
+	if($('#sc-perspective-wrapper').length > 0){
+		return false;
+	}
+	var perspectiveWrapper = $('<div id=\'sc-perspective-wrapper\'></div>')[0];
+	var wrapper = $('<div id=\'sc-wrapper\' class=\'initial\'></div>')[0];
+	$(perspectiveWrapper).append(wrapper);
+	$(document.body).prepend(perspectiveWrapper);
+	$(wrapper).append($('#surface'));
+}
+SC.prependChart = function() {
+
+	if($('#sc-chart').length > 0){
+		return false;
+	}
+
+	var chart = $('<div id=\'sc-chart\' class=\'hidden\'></div>')[0];
+	$(document.body).prepend(chart);
+	SC.renderChart();
+}
+SC.renderChart = function(chart) {
+
+}
 if(SC.checkBoardURL) {
 	var t = window.setInterval(function(){
 		if($('.list').length > 0) {
 			window.setTimeout(function(){
 				SC.renderCardNumberAndPointBadge();
-				SC.popStateHandler();
+				SC.wrapBody();
+				SC.prependChart();
+				SC.createTabBtn();
 			}, 500);
 		}
 	}, 300);

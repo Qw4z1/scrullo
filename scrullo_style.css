@@ -5,3 +5,64 @@
 	background-color: rgb(36, 120, 168) !important;
 	color: white !important;
 }
+.sc-tab {
+	position: absolute;
+	right: 248px;
+	bottom: -5px;
+	background-color: #2B7CAB;
+	display: inline;
+	color: white;
+	text-shadow: 0 1px rgba(0, 0, 0, 0.4);
+	padding: 8px 20px;
+	cursor: pointer;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+	border-radius: 3px 3px 0px 0px;
+	-webkit-transition: -webkit-transform 1s;
+}
+.sc-tab:hover {
+	background-color: #164B69;
+}
+.sc-tab a {
+	color: white !important;
+	font-family: 'Helvetica Neue', arial;
+	font-size: 13px;
+	font-weight: bold;
+}
+.sc-tab.intial {
+	-webkit-transform: translateY(60px);
+}
+.sc-tab.final {
+	-webkit-transform: translateY(0px);
+}
+#sc-perspective-wrapper {
+	position: relative;
+	-webkit-perspective: 1000px;
+	background-color: #222;
+	-webkit-transform: translateZ(0%);
+}
+#sc-wrapper {
+	-webkit-transition: -webkit-transform 0.8s linear;
+	background-color: white;
+}
+#sc-wrapper.intital {
+	-webkit-transform: translateZ(0px);
+}
+#sc-wrapper.half-hidden {
+	-webkit-transform: translateZ(-200px);
+}
+#sc-chart {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	background-color: #164B69;
+	z-index: 1000;
+	-webkit-transition: -webkit-transform 0.8s linear;
+}
+#sc-chart.hidden{
+	-webkit-transform: translateX(100%);
+}
+#sc-chart.revealed{
+	-webkit-transform: translateX(0%);
+}
