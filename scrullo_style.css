@@ -5,10 +5,15 @@
 	background-color: rgb(36, 120, 168) !important;
 	color: white !important;
 }
-.sc-tab {
+#sc-tab-container {
 	position: absolute;
-	right: 248px;
 	bottom: -5px;
+	right: 248px;
+	width: 500px;
+	height: 34px;
+}
+.sc-tab {
+	float: right;
 	background-color: #2B7CAB;
 	display: inline;
 	color: white;
@@ -19,8 +24,17 @@
 	border-radius: 3px 3px 0px 0px;
 	-webkit-transition: -webkit-transform 1s;
 }
+.sc-tab.active {
+	background-color: #164B69;
+}
 .sc-tab:hover {
 	background-color: #164B69;
+}
+.sc-tab.slide-show {
+	-webkit-transition-delay: 0.1s;
+}
+.sc-tab.burn-down-chart {
+	-webkit-transition-delay: 0.2s;
 }
 .sc-tab a {
 	color: white !important;

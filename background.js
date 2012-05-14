@@ -73,25 +73,38 @@ SC.checkBoardURL = function() {
 	var regEx = /^https:\/\/trello.com\/board/;
 	return regEx.test(window.location.href);
 }
-SC.createTabBtn = function() {
+SC.createTabs = function() {
 	if($('#board-header .sc-tab').length > 0){
 		return false;
 	}
-	var tab = $('<div class=\'sc-tab intial\'><a>Burn-down chart</a></div>')[0];
-	$('#board-header .board-title').append(tab)
+	var tabContainer = $('<div id=\'sc-tab-container\'></div>')[0];
+	$('#board-header .board-title').append(tabContainer);
+
+	var burnDownChart = $('<div class=\'sc-tab burn-down-chart intial\'><a>Burn-down chart</a></div>')[0];
+	$(tabContainer).append(burnDownChart);
+
+/*	var slideShow = $('<div class=\'sc-tab slide-show intial\'><a>Slideshow</a></div>')
+	$(tabContainer).append(slideShow);*/
+
+	var cards = $('<div class=\'sc-tab cards active intial\'><a>Cards</a></div>')
+	$(tabContainer).append(cards);
+
 	window.setTimeout(function(){ 
-		$(tab).addClass('final')
+		$('.sc-tab').addClass('final')
 		.removeClass('intial');
 		var showBurndDownChart = function(){
 			SC.showBurndDownChart(this);
 		}
-		$(tab).click(SC.showBurndDownChart);
+		$(burnDownChart).click(SC.showBurndDownChart);
 	}, 0);
+
+	SC.attachFullScreenRequest();
+
 
 }
 SC.showBurndDownChart = function(HTML_OBJ) {
-	$('#sc-perspective-wrapper #sc-wrapper').addClass('half-hidden').removeClass('intial');
-	$('#sc-chart').addClass('revealed').removeClass('hidden');
+	/*$('#sc-perspective-wrapper #sc-wrapper').addClass('half-hidden').removeClass('intial');
+	$('#sc-chart').addClass('revealed').removeClass('hidden');*/
 	$(HTML_OBJ).unbind();
 
 }
@@ -111,13 +124,26 @@ SC.prependChart = function() {
 	if($('#sc-chart').length > 0){
 		return false;
 	}
-
 	var chart = $('<div id=\'sc-chart\' class=\'hidden\'></div>')[0];
 	$(document.body).prepend(chart);
 	SC.renderChart();
 }
-SC.renderChart = function(chart) {
-
+SC.renderChart = function(chartElement) {
+	//pmprmry
+}
+SC.attachFullScreenRequest = function() {
+	$('.list-icon').each(function() {
+		$(this).click(function(){
+			var
+          	el = document.documentElement
+        	, rfs =
+               el.requestFullScreen
+            || el.webkitRequestFullScreen
+            || el.mozRequestFullScreen
+    		;
+    		rfs.call(el);
+		});
+	});
 }
 if(SC.checkBoardURL) {
 	var t = window.setInterval(function(){
@@ -126,7 +152,7 @@ if(SC.checkBoardURL) {
 				SC.renderCardNumberAndPointBadge();
 				SC.wrapBody();
 				SC.prependChart();
-				SC.createTabBtn();
+				SC.createTabs();
 			}, 500);
 		}
 	}, 300);
