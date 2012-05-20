@@ -5,49 +5,6 @@
 	background-color: rgb(36, 120, 168) !important;
 	color: white !important;
 }
-#sc-tab-container {
-	position: absolute;
-	bottom: -5px;
-	right: 248px;
-	width: 500px;
-	height: 34px;
-}
-.sc-tab {
-	float: right;
-	background-color: #2B7CAB;
-	display: inline;
-	color: white;
-	text-shadow: 0 1px rgba(0, 0, 0, 0.4);
-	padding: 8px 20px;
-	cursor: pointer;
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-	border-radius: 3px 3px 0px 0px;
-	-webkit-transition: -webkit-transform 1s;
-}
-.sc-tab.active {
-	background-color: #164B69;
-}
-.sc-tab:hover {
-	background-color: #164B69;
-}
-.sc-tab.slide-show {
-	-webkit-transition-delay: 0.1s;
-}
-.sc-tab.burn-down-chart {
-	-webkit-transition-delay: 0.2s;
-}
-.sc-tab a {
-	color: white !important;
-	font-family: 'Helvetica Neue', arial;
-	font-size: 13px;
-	font-weight: bold;
-}
-.sc-tab.intial {
-	-webkit-transform: translateY(60px);
-}
-.sc-tab.final {
-	-webkit-transform: translateY(0px);
-}
 #sc-perspective-wrapper {
 	position: relative;
 	-webkit-perspective: 1000px;
@@ -64,7 +21,7 @@
 #sc-wrapper.half-hidden {
 	-webkit-transform: translateZ(-200px);
 }
-#sc-chart {
+#sc-slide-show {
 	position: absolute;
 	top: 0px;
 	left: 0px;
@@ -73,47 +30,22 @@
 	background-color: #000;
 	z-index: 1000;
 }
-#sc-perspective-board {
+#sc-body {
 	position: relative;
 	background-color: #222;
 	color: #666;
 	height: 100%;
-	width: auto;
-	margin: 100px 0px 100px 0px;
-	-webkit-perspective: 1000px;
-	-webkit-perspective-origin: 50% 50%;
+	width: 100%;
 }
-
-#sc-board {
-	position: absolute;
-	top: 300px;
-	left: 40%;
-	width: 60%;
-	height: 100
-	-webkit-transition-property: -webkit-transform;
-	-webkit-transition-duration: 2s;
-	-webkit-transition-timing-function: cubic-bezier(0.2, 0.6, 0.6, 0.9);
+#sc-left-btn {
+	position: relative;
+	float: left;
+	width: 50%;
+	height: 100%;
 }
-
-.sc-ticket {
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	width: 250px;
-	height: 250px;
-	background-color: whiteSmoke;
-	padding: 40px;
-	margin: 20px;
-	font-size: 14px;
-	-webkit-transition: -webkit-transform 0.6s;
-	border: 5px solid #999;
-}
-.sc-ticket.blurred {
-	z-index: 0;
-	-webkit-transform: translateZ(0px) scale(1, 1);
-
-}
-.sc-ticket.focused {
-	z-index: 1000;
-	-webkit-transform: translateZ(400px) scale(2, 2);
+#sc-right-btn {
+	position: relative;
+	float: left;
+	width: 50%;
+	height: 100%;
 }
