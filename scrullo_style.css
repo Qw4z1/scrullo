@@ -70,13 +70,50 @@
 	left: 0px;
 	width: 100%;
 	height: 100%;
-	background-color: #164B69;
+	background-color: #000;
 	z-index: 1000;
-	-webkit-transition: -webkit-transform 0.8s linear;
 }
-#sc-chart.hidden{
-	-webkit-transform: translateX(100%);
+#sc-perspective-board {
+	position: relative;
+	background-color: #222;
+	color: #666;
+	height: 100%;
+	width: auto;
+	margin: 100px 0px 100px 0px;
+	-webkit-perspective: 1000px;
+	-webkit-perspective-origin: 50% 50%;
 }
-#sc-chart.revealed{
-	-webkit-transform: translateX(0%);
+
+#sc-board {
+	position: absolute;
+	top: 300px;
+	left: 40%;
+	width: 60%;
+	height: 100
+	-webkit-transition-property: -webkit-transform;
+	-webkit-transition-duration: 2s;
+	-webkit-transition-timing-function: cubic-bezier(0.2, 0.6, 0.6, 0.9);
+}
+
+.sc-ticket {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 250px;
+	height: 250px;
+	background-color: whiteSmoke;
+	padding: 40px;
+	margin: 20px;
+	font-size: 14px;
+	-webkit-transition: -webkit-transform 0.6s;
+	border: 5px solid #999;
+}
+.sc-ticket.blurred {
+	z-index: 0;
+	-webkit-transform: translateZ(0px) scale(1, 1);
+
+}
+.sc-ticket.focused {
+	z-index: 1000;
+	-webkit-transform: translateZ(400px) scale(2, 2);
 }

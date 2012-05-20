@@ -14,12 +14,30 @@
 		}
 		return false;
 	}
+	$.isDocumentInFullScreenMode = function() {  
+  		// Note that the browser fullscreen (triggered by short keys) might  
+  		// be considered different from content fullscreen when expecting a boolean  
+  		return ((document.fullScreenElement && document.fullScreenElement !== null) ||    // alternative standard methods  
+      			(document.webkitIsFullScreen));
+	}  
+	$.check3dState = function(element) {
+		var transformProperty = $(this).css('-webkit-transform');
+		var regEx = /(\d+px)/g;
+		return transformProperty.match(regEx);
+	}	
 })(jQuery);
 
 
 if(typeof SC == 'undefined') {
 	var SC = {};
 }
+
+var CURR_LIST,
+CURR_INDEX = 0,
+MAX_CARDS,
+currentTimer,
+board;
+
 SC.renderCardNumberAndPointBadge = function() {
 	$('.list-card').each(function(){
 		
@@ -98,15 +116,14 @@ SC.createTabs = function() {
 		$(burnDownChart).click(SC.showBurndDownChart);
 	}, 0);
 
-	SC.attachFullScreenRequest();
+	
 
 
 }
 SC.showBurndDownChart = function(HTML_OBJ) {
 	/*$('#sc-perspective-wrapper #sc-wrapper').addClass('half-hidden').removeClass('intial');
 	$('#sc-chart').addClass('revealed').removeClass('hidden');*/
-	$(HTML_OBJ).unbind();
-
+	$(HTML_OBJ).unbind()
 }
 SC.wrapBody = function() {
 
@@ -126,12 +143,55 @@ SC.prependChart = function() {
 	}
 	var chart = $('<div id=\'sc-chart\' class=\'hidden\'></div>')[0];
 	$(document.body).prepend(chart);
-	SC.renderChart();
 }
-SC.renderChart = function(chartElement) {
-	//pmprmry
+SC.renderTickets = function(listNumber) {
+	if($('#sc-perspective-board').length > 0){
+		$('#sc-perspective-board').remove();
+	}
+
+	SC.prependChart();
+	var perspectiveBoard = $('<div id=\'sc-perspective-board\'></div>')[0];
+	$('#sc-chart').append(perspectiveBoard);
+	board = $('<ul id=\'sc-board\'></ul>')[0];
+	$(perspectiveBoard).append(board);
+	var col = 0,
+	n = 1,
+	top,
+	left;
+	$('.list:eq('+listNumber+') .list-card').each(function(){
+
+		var title = $(this).find('.list-card-title').text(),
+		removalOfPointsRegEx = /(#\d+)/g,
+		pointsRegEx = /#\d+/,
+		points = title.match(pointsRegEx),
+		title = points + ' ' + $.trim(title.replace(removalOfPointsRegEx, '')),
+		ticket = $('<li class=\'sc-ticket blurred\'>'+title+'</li>')[0];
+		$(board).append(ticket);
+		var rest = n%3, 
+		translate3d;
+		var x = col * 350;
+		switch(rest){
+			case 0:
+				left = x;
+				top = 660;
+				col++;
+				break;
+			case 1:
+				left = x;
+				top = 0;
+				break;
+			case 2:
+				left = x;
+				top = 350;
+				break;
+		}
+		$(ticket).css('top', top).css('left', left);
+		n++;
+	});
+	MAX_CARDS = n;
 }
 SC.attachFullScreenRequest = function() {
+	var n = -1;
 	$('.list-icon').each(function() {
 		$(this).click(function(){
 			var
@@ -139,11 +199,46 @@ SC.attachFullScreenRequest = function() {
         	, rfs =
                el.requestFullScreen
             || el.webkitRequestFullScreen
-            || el.mozRequestFullScreen
     		;
     		rfs.call(el);
-		});
+    		CURR_LIST = $(this).attr('list-number');
+		})
+		.attr('list-number', n);
+		n++;
 	});
+}
+SC.focusTicket = function(ticketNumber) {
+	var ticket = $('.sc-ticket:eq('+ticketNumber+')')[0];
+	$('.sc-ticket').addClass('blurred')
+	.removeClass('focused');
+	$('.sc-ticket:eq('+ticketNumber+')').addClass('focused').removeClass('blurred')
+	var n = ticketNumber + 1;
+	var rest = n%3, 
+	translate3d;
+	var rest2 = ticketNumber % 3;
+	var col = (ticketNumber - rest2) / 3;
+	var x = col * 620;
+	SC.focusCamera(ticket)
+}
+SC.focusCamera = function(ticket) {
+	var top = (parseInt($(ticket).css('top').replace('px', ''), 10) - 200) + 'px';
+	var left = $(ticket).css('left');
+	$(board).css('margin-left','-'+left).css('margin-top', '-'+top).css('-webkit-transform-origin', left + ' 0px');
+}
+SC.tipBoard = function(leftOrRight) {
+	if(leftOrRight == 'right'){
+		board.style.webkitTransform = 'rotateY('+50+'deg)';
+	}else{
+		board.style.webkitTransform = 'rotateY(-'+50+'deg)';
+	}
+	$('#sc-board')[0].style.webkitTransformDuration = '330ms';
+	if(currentTimer){
+		clearTimeout(currentTimer);
+	}
+	currentTimer = setTimeout(function(){
+		board.style.webkitTransform = 'rotateY(0deg)';
+		board.style.webkitTransformDuration = '5s';
+	}, 330);
 }
 if(SC.checkBoardURL) {
 	var t = window.setInterval(function(){
@@ -151,10 +246,48 @@ if(SC.checkBoardURL) {
 			window.setTimeout(function(){
 				SC.renderCardNumberAndPointBadge();
 				SC.wrapBody();
-				SC.prependChart();
-				SC.createTabs();
+				SC.attachFullScreenRequest();
 			}, 500);
 		}
 	}, 300);
 }
+document.addEventListener("webkitfullscreenchange", function(e){
+   	if($.isDocumentInFullScreenMode()){
+   		SC.renderTickets(CURR_LIST);
+   	}else{
+   		$('#sc-chart').remove();
+   	}
+}, false);
+$(window).bind('keydown', function(){
+	if (!e) var e = window.event;
+	var keyCode = e.which || e.keyCode;
+	var newIndex,
+	focus = true;
+	switch(keyCode){
+		case 37:
+		newIndex = CURR_INDEX - 3;//left
+		CURR_INDEX = (newIndex < 0) ? CURR_INDEX : newIndex; 
+		SC.tipBoard('left'); 
+		break;
+		case 38://up
+		newIndex = CURR_INDEX - 1;
+		CURR_INDEX = (newIndex < 0) ? CURR_INDEX : newIndex; 
+		break;
+		case 39://right
+		newIndex = CURR_INDEX + 3;
+		CURR_INDEX = (newIndex > MAX_CARDS - 1) ? CURR_INDEX : newIndex;
+		SC.tipBoard('right'); 
+		break;
+		case 40://down
+		newIndex = CURR_INDEX + 1;
+		CURR_INDEX = (newIndex > MAX_CARDS - 1) ? CURR_INDEX : newIndex; 
+		break;
+		default: 
+		focus = false
+		break;
+	}
+	if(focus){
+		SC.focusTicket(CURR_INDEX);
+	}
+})
 
