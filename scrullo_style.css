@@ -79,6 +79,7 @@
 	width: 800px;
 	line-height: 50px;
 	text-align: center;
+	-webkit-transition: -webkit-transform 1s;
 }
 #sc-exit-btn {
 	position: absolute;

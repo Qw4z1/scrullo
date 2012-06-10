@@ -89,6 +89,11 @@ var SC = (function($){
 
 			setTimeout(function () {
 				$('#sc-body').css('width', 300);
+				$('#sc-ticket-list').css('left', -340);
+				var ticket = $('#sc-ticket'),
+				width = ticket.width(),
+				scaleFacator = 260 / width;
+				ticket.css('-webkit-transform', 'scale('+scaleFacator+','+scaleFacator+')');
 			}, 0);
 
 		},
