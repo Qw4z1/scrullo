@@ -98,15 +98,7 @@ var SC = (function($){
 
 		},
 		exit: function () {
-			$('#sc-slide-show').remove();
-			$('.list-icon').each(function() {
-				$(this).click(function(){
-					
-		    		CURR_LIST = $(this).attr('list-number');
-		    		SC.renderSlideShow(CURR_LIST);
-		    		$(this).unbind();
-				})
-			});
+			$.refreshBrowser();
 			SLIDE_SHOW_DEMO_STATE = false;
 		}
 	}
