@@ -333,7 +333,6 @@ var SC = (function($){
 		$(SLIDE_SHOW_ELEMENT).append(body);
                 INITIAL_BODY_WIDTH = $(body).width();
                 BODY_HEIGHT = $(window).height();
-                alert(BODY_HEIGHT);
                 
                 // Ticket
                 SC.ticket = $('<div id=\'sc-ticket\'></div>')[0];
