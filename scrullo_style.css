@@ -29,6 +29,20 @@
 	height: 100%;
 	width: 100%;
 }
+    #sc-body .helper-animation {
+        position: absolute;
+        left: 0px;
+        width: 100%;
+        height: 0px;
+        background-color: black;
+        -webkit-transition: height 1s;
+    }
+    #sc-body #sc-top-helper-animation {
+        top: 0px;
+    }
+    #sc-body #sc-bottom-helper-animation {
+        bottom: 0px;
+    }
 #sc-right-btn {
 	position: relative;
 	float: left;
