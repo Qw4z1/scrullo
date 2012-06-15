@@ -107,3 +107,27 @@
 #sc-exit-btn:hover {
 	opacity: 1;
 }
+#sc-iframe-container {
+    position: absolute;
+    left: 120%;
+    height: 100%;
+    width: 1200px
+}
+#sc-iframe {
+    height: 100%;
+    width: 100%;
+}
+.list-title {
+    width: 130px;
+    min-height: 23px;
+}
+.sc-sum-points {
+    position: absolute;
+    right: 20px;
+    top: 3px;
+    padding: 1px 6px;
+    background-color: #2478A8;
+    border-radius: 4px;
+    color: white;
+    font-weight: bold;
+}

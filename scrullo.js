@@ -51,7 +51,10 @@ var SC = (function($){
 	SC.ticket;
 
 	// Ticket list shown  
-	SC.ticketList; 	
+	SC.ticketList;
+        
+        // Iframe container 
+        SC.iframeContainer;
 
 	/**
 	 *  @object 
@@ -72,6 +75,23 @@ var SC = (function($){
 		$('.sc-list-item').css('border', '3px solid #666');
 		$(card).css('border', '3px solid #08c');
 		CURR_INDEX = parseInt($(card).attr('sc-index'), 10);
+                
+                var url = this._getURL($('.sc-list-item:eq('+CURR_INDEX+')', SC.ticketList));
+		
+                if(!url) {
+                    if(SLIDE_SHOW_DEMO_STATE)
+                        this.undemo();
+                    return false;
+                }else{
+//                    if(!SLIDE_SHOW_DEMO_STATE){
+//                        this.demo();
+//                    }
+                        
+                }
+                
+                this._createIFrame(url);
+                
+                
             },
             showNextCard: function () {
 		
@@ -88,7 +108,13 @@ var SC = (function($){
 		}
             },
             demo: function () {
-			
+                
+                var url= this._getURL($('.sc-list-item:eq('+CURR_INDEX+')', SC.ticketList));
+		
+                if(!url) {
+                    return false;
+                }
+                
 		if(SLIDE_SHOW_DEMO_STATE) {
                     return false;
 		}
@@ -98,27 +124,90 @@ var SC = (function($){
 		$('#sc-body')
 		.css('width', currentBodyWidth)
 		.css('-webkit-transition', 'width 1s');
-                        
-                var topHelperAnimationHeight = 0.3 * BODY_HEIGHT - 10,
-                bottomHelperAnimationHeight = BODY_HEIGHT - topHelperAnimationHeight - 400;  
-		setTimeout(function () {
-                    $('#sc-body').css('width', 300);
-                    $('#sc-top-helper-animation').css('height', topHelperAnimationHeight);
-                    $('#sc-bottom-helper-animation').css('height', bottomHelperAnimationHeight);
-                    $('#sc-ticket-list').css('left', -340);
-                    var ticket = $('#sc-ticket'),
-                    width = ticket.width(),
-                    scaleFacator = 260 / width;
-                    ticket.css('-webkit-transform', 'scale('+scaleFacator+','+scaleFacator+')');
-		}, 0);
+                
+                setTimeout(function(){
+                    var topHelperAnimationHeight = 0.3 * BODY_HEIGHT - 10,
+                    bottomHelperAnimationHeight = BODY_HEIGHT - topHelperAnimationHeight - 400;  
+                    setTimeout(function () {
+                        $('#sc-body').css('width', 300);
+                        $('#sc-top-helper-animation').css('height', topHelperAnimationHeight);
+                        $('#sc-bottom-helper-animation').css('height', bottomHelperAnimationHeight);
+                        $('#sc-ticket-list').css('left', -340);
+                        var ticket = $('#sc-ticket'),
+                        width = ticket.width(),
+                        scaleFacator = 260 / width;
+                        ticket.css('-webkit-transform', 'scale('+scaleFacator+','+scaleFacator+')');
+                    }, 0);
+                }, 0);
+                
+                
+                if(!SC.iframeContainer) {
+                    this._createIFrame(url);
+                }
+                
+         
+                
 
             },
             undemo: function () {
-                    
+                
+                if(!SLIDE_SHOW_DEMO_STATE) {
+                    return false;
+		}
+                
+                $('#sc-body')
+                .css('width', INITIAL_BODY_WIDTH)
+                $('#sc-top-helper-animation').css('height', 0);
+                $('#sc-bottom-helper-animation').css('height', 0);
+                $('#sc-ticket-list').css('left', '');
+                $('#sc-ticket').css('-webkit-transform', 'scale(1, 1)');
+                $('#sc-body').bind('webkitTransitionEnd', function() {
+                    setTimeout(function() {
+                    }, 100);
+                    $(this).unbind();
+                });
+            
+                SLIDE_SHOW_DEMO_STATE = false;
             },
             exit: function () {
 		$.refreshBrowser();
 		SLIDE_SHOW_DEMO_STATE = false;
+            },
+            
+            
+            // Private functions
+            _getURL: function (card) {
+                var text = $(card).text();
+                var regEx = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/;
+               
+                var url = text.match(regEx);
+                if(url != null){
+                    return url[0];
+                }else{
+                    return false;
+                }
+                
+                
+            },
+            
+            _createIFrame: function (url) {
+                
+                // Iframe container
+                $(SC.iframeContainer).remove();
+                SC.iframeContainer = $('<div id=\'sc-iframe-container\'></div>')[0];
+                $('#sc-body').append(SC.iframeContainer);
+                $(SC.iframeContainer)
+                .css('height', '100%')
+                .css('width', '1200px');
+                
+                var iframe = $('<iframe id=\'sc-iframe\'></iframe>')[0];
+                
+                iframe.src = url;
+                $(SC.iframeContainer).append(iframe);
+                
+                $(SC.iframe)
+                .css('height', '100%')
+                .css('width', '1200px');
             }
 	}
 
@@ -157,6 +246,7 @@ var SC = (function($){
                     if($('.list').length > 0) {
 			setTimeout(function(){
                             SC.renderCardNumberAndPointBadge();
+                            SC.renderTotalListPoints();
                             SC.wrapBody();
 			}, 500);
                         if (!ATTACHED_SLIDE_SHOW_HANDLER) {
@@ -185,8 +275,11 @@ var SC = (function($){
                     case 40:// Down
                         SC.slideshow.showNextCard();
 			break;
-                    case 68:// Space
-			SC.slideshow.demo();
+                    case 68:// Letter D
+                        if(!SLIDE_SHOW_DEMO_STATE)
+                            SC.slideshow.demo();
+                        else
+                            SC.slideshow.undemo();
 			break;
                     default:
 			break;
@@ -227,13 +320,13 @@ var SC = (function($){
 		cardNumber = card.find('.list-card-title span').text(),
 		points = card.find('.list-card-title').text();
 			
-		var regEx = /\(\d+\)/;
+		var regEx = /\(\d+[\.|,]?\d*\)/;
 		if(!$.isEmpty(points)) {	
                     points = points.match(regEx) + '';
                     if(!$.isEmpty(points)) {	
 
                         //Format points
-                        points = points.match(/\d+/);
+                        points = points.match(/\d+[\.|,]?\d*/);
                         var pointBadge = SC.pointBadge.createPointBadge(points);
 				
                         //Append points to badges
@@ -249,7 +342,28 @@ var SC = (function($){
 		p.prepend(cardNumberElement);
             });
 	}
-
+        
+        /**
+         *  Render all tickets points
+         */
+        SC.renderTotalListPoints = function () {
+            $('.list').each(function() {
+                
+               //Check if there is already cards
+               if($('.sc-sum-points', this).length > 0){
+                 return true;//continue
+               }
+               var sum = 0;
+               $('.badge.point-badge', this).each(function(){
+                  var points = $(this).text();
+                  points = parseFloat(points.replace('p', ''));
+                  sum += points;
+               });
+               
+               var sumElement = $('<div class=\'sc-sum-points\'>'+sum+'</div>')[0];
+               $('.list-title', this).append(sumElement);
+            });
+        }
 
 	/**
 	 * 	@method
@@ -361,7 +475,6 @@ var SC = (function($){
 		$(SLIDE_SHOW_ELEMENT).append(SC.exitBtn);
 		
 		//Unbind for performance
-		
 		$('.list-icon').unbind();
 	}
 
