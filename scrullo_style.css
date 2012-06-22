@@ -28,6 +28,7 @@
 	color: #666;
 	height: 100%;
 	width: 100%;
+        -webkit-transform: translateZ(0);
 }
     #sc-body .helper-animation {
         position: absolute;
@@ -81,6 +82,7 @@
 	color: #666;
 	cursor: pointer;
 	border: 3px solid #666;
+        word-wrap: break-word;
 }
 #sc-ticket {
 	position: absolute;
