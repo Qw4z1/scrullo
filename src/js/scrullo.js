@@ -451,9 +451,9 @@ var SCRULLO = (function($){
 		C.ticketList = $('<ul id=\'sc-ticket-list\'></ul>')[0];
 		$(body).append(C.ticketList);
                 
-                // Exit button
+    // Exit button
 		C.exitBtn = $('<img id=\'sc-exit-btn\'></img>')[0]
-		C.exitBtn.src = chrome.extension.getURL('images/exitBtn.png');
+		C.exitBtn.src = chrome.extension.getURL('/resources/images/exit-btn.png');
 		$(C.exitBtn).click(C.slideshow.exit);
 		$(SLIDE_SHOW_ELEMENT).append(C.exitBtn);
 		
