@@ -10,11 +10,11 @@
   "content_scripts" : [
     {
      "matches" : ["https://trello.com/*"],
-     "css" : ["scrullo_style.css"],
-     "js" : ["jquery.js", "system.js", "scrullo.js"]
+     "css" : ["src/css/style.css"],
+     "js" : ["lib/jquery.js", "lib/system.js", "src/js/scrullo.js"]
     }
   ],
   "web_accessible_resources": [
-    "images/exitBtn.png"
+    "resources/images/exit-btn.png"
   ]
 }
