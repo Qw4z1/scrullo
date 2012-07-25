@@ -1,6 +1,6 @@
 {
   "name": "Scrullo",
-  "version": "1.0",
+  "version": "1.0.1",
   "manifest_version": 2,
   "description": "Makes it easier to manage scrum in Trello",
   "permissions": [
@@ -15,6 +15,7 @@
     }
   ],
   "web_accessible_resources": [
-    "resources/images/exit-btn.png"
+    "resources/images/exit-btn.png",
+    "resources/images/slide-show-btn.png"
   ]
 }

@@ -53,8 +53,8 @@ var SCRULLO = (function($){
 	// Ticket list shown  
 	C.ticketList;
         
-        // Iframe container 
-        C.iframeContainer;
+  // Iframe container 
+  C.iframeContainer;
 
 	/**
 	 *  @object 
@@ -243,7 +243,6 @@ var SCRULLO = (function($){
           }
         }
 		  }, 300);
-			
     }
             
     // Bind window key events
@@ -347,6 +346,8 @@ var SCRULLO = (function($){
        
        var sumElement = $('<div class=\'sc-sum-points\'>'+sum+'</div>')[0];
        $('.list-title', this).append(sumElement);
+       
+       C.setAppIconImage(this);
     });
   }
 
@@ -378,6 +379,19 @@ var SCRULLO = (function($){
     $(document.body).prepend(perspectiveWrapper);
     $(wrapper).append($('#surface'));
 	}
+	
+	
+	/**
+   *  @public method
+   *    Sets the app icon 
+   *  @result void 
+   */
+	C.setAppIconImage = function(context) {
+	  $('.small-icon.list-icon', context).css({
+	    'background': 'url('+chrome.extension.getURL('/resources/images/slide-show-btn.png')+') no-repeat',
+	    'background-position': 'top left'
+	  });
+	}
 
 
 	/**
@@ -398,7 +412,7 @@ var SCRULLO = (function($){
 
 	/**
 	 *  @method
-	 *    prependSlideShow, Prepends a slideshow to the wrapper of the body
+	 *   prependSlideShow, Prepends a slideshow to the wrapper of the body
 	 *  @result
 	 *   BOOL or void 
 	 */
@@ -433,6 +447,7 @@ var SCRULLO = (function($){
     
     // Ticket
     C.ticket = $('<div id=\'sc-ticket\'></div>')[0];
+    $(C.ticket).css('top', window.innerHeight * 0.3);
 		$(body).append(C.ticket);
 		
     // Helper animation
