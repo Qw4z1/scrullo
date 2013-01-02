@@ -2,22 +2,22 @@
 
 var SCRULLO = (function($){
 
-	
+
 	var C = {},
-	
-	
-	/* 
+
+
+	/*
 	-------------------------------------------------------
-	Private variables 
+	Private variables
 	-------------------------------------------------------
 	*/
-        
+
 	// Attached slide show handler
   ATTACHED_SLIDE_SHOW_HANDLER = false,
-        
+
   // Reference to the interval
   INTERVAL_REFERENCE,
-        
+
 	// Current list that is showing in slide show
 	CURR_LIST,
 
@@ -29,36 +29,36 @@ var SCRULLO = (function($){
 
 	// Slide show object
 	SLIDE_SHOW_ELEMENT,
-        
+
   // Body height
   BODY_HEIGHT,
-        
+
   // Initial body width
   INITIAL_BODY_WIDTH,
 
 	// BOOL Demo state
 	SLIDE_SHOW_DEMO_STATE = false;
 
-	
 
-	/* 
+
+	/*
 	-------------------------------------------------------
-	Public variables 
+	Public variables
 	-------------------------------------------------------
 	*/
 
 	// Ticket text show in slide show
 	C.ticket;
 
-	// Ticket list shown  
+	// Ticket list shown
 	C.ticketList;
-        
-  // Iframe container 
+
+  // Iframe container
   C.iframeContainer;
 
 	/**
-	 *  @object 
-	 * 	Slideshow, Slideshow object contains different methods 
+	 *  @object
+	 * 	Slideshow, Slideshow object contains different methods
 	 *  @method
 	 *	showCard
 	 *  @method
@@ -70,13 +70,13 @@ var SCRULLO = (function($){
 	 */
 	C.slideshow = {
     showCard: function (card) {
-      
+
   		var text = $(card).text();
   		C.ticket.innerHTML = text;
   		$('.sc-list-item').css('border', '3px solid #666');
   		$(card).css('border', '3px solid #08c');
   		CURR_INDEX = parseInt($(card).attr('sc-index'), 10);
-                
+
       var url = this._getURL($('.sc-list-item:eq('+CURR_INDEX+')', C.ticketList));
 
       if(!url) {
@@ -84,46 +84,46 @@ var SCRULLO = (function($){
               this.undemo();
           return false;
       }
-                
+
       this._createIFrame(url);
-                
-                
+
+
     },
     showNextCard: function () {
-		
+
   		if(CURR_INDEX + 1 < MAX_INDEX){
         CURR_INDEX++;
         C.slideshow.showCard($('.sc-list-item:eq('+CURR_INDEX+')', C.ticketList));
   		}
     },
     showPrevCard: function () {
-			
+
   		if(CURR_INDEX - 1 >= 0){
         CURR_INDEX--;
         C.slideshow.showCard($('.sc-list-item:eq('+CURR_INDEX+')', C.ticketList));
   		}
     },
     demo: function () {
-                
+
       var url= this._getURL($('.sc-list-item:eq('+CURR_INDEX+')', C.ticketList));
 
       if(!url) {
         return false;
       }
-      
+
   		if(SLIDE_SHOW_DEMO_STATE) {
         return false;
   		}
   		SLIDE_SHOW_DEMO_STATE = true;
-                          
+
   		var currentBodyWidth = $('#sc-body').width();
   		$('#sc-body')
   		.css('width', currentBodyWidth)
   		.css('-webkit-transition', 'width 1s');
-                
+
       setTimeout(function(){
         var topHelperAnimationHeight = 0.3 * BODY_HEIGHT - 10,
-        bottomHelperAnimationHeight = BODY_HEIGHT - topHelperAnimationHeight - 400;  
+        bottomHelperAnimationHeight = BODY_HEIGHT - topHelperAnimationHeight - 400;
         setTimeout(function () {
           $('#sc-body').css('width', 300);
           $('#sc-top-helper-animation').css('height', topHelperAnimationHeight);
@@ -135,18 +135,18 @@ var SCRULLO = (function($){
           ticket.css('-webkit-transform', 'scale('+scaleFacator+','+scaleFacator+')');
         }, 0);
       }, 0);
-                
-                
+
+
       if(!C.iframeContainer) {
         this._createIFrame(url);
       }
     },
     undemo: function () {
-            
+
       if(!SLIDE_SHOW_DEMO_STATE) {
         return false;
       }
-        
+
       $('#sc-body')
       .css('width', INITIAL_BODY_WIDTH)
       $('#sc-top-helper-animation').css('height', 0);
@@ -165,13 +165,13 @@ var SCRULLO = (function($){
 		  $.refreshBrowser();
 		  SLIDE_SHOW_DEMO_STATE = false;
     },
-            
-            
+
+
     // Private functions
     _getURL: function (card) {
       var text = $(card).text();
       var regEx = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/;
-     
+
       var url = text.match(regEx);
       if(url != null){
           return url[0];
@@ -179,9 +179,9 @@ var SCRULLO = (function($){
           return false;
       }
     },
-            
+
     _createIFrame: function (url) {
-        
+
         // Iframe container
         $(C.iframeContainer).remove();
         C.iframeContainer = $('<div id=\'sc-iframe-container\'></div>')[0];
@@ -189,12 +189,12 @@ var SCRULLO = (function($){
         $(C.iframeContainer)
         .css('height', '100%')
         .css('width', '1200px');
-        
+
         var iframe = $('<iframe id=\'sc-iframe\'></iframe>')[0];
-        
+
         iframe.src = url;
         $(C.iframeContainer).append(iframe);
-        
+
         $(C.iframe)
         .css('height', '100%')
         .css('width', '1200px');
@@ -206,7 +206,7 @@ var SCRULLO = (function($){
 	 *  @object
 	 *      pointBadge, contains different methods about point badge
 	 *  @method
-	 *      createPointBadge, 
+	 *      createPointBadge,
 	 */
 	C.pointBadge = {
     createPointBadge: function(points) {
@@ -217,7 +217,7 @@ var SCRULLO = (function($){
     savePoints: function(){}
 	}
 
-	/* 
+	/*
 	-------------------------------------------------------
 	Constructor
 	-------------------------------------------------------
@@ -228,7 +228,7 @@ var SCRULLO = (function($){
 	 *  @constructor
 	 */
 	C.constructor = function() {
-		
+
     if(C.checkBoardURL) {
 		  INTERVAL_REFERENCE = setInterval(function(){
         if($('.list').length > 0) {
@@ -244,7 +244,7 @@ var SCRULLO = (function($){
         }
 		  }, 300);
     }
-            
+
     // Bind window key events
     $(window).bind('keydown', function(){
     	if (!e) var e = window.event;
@@ -257,7 +257,7 @@ var SCRULLO = (function($){
           C.slideshow.showPrevCard();
           break;
         case 39:// Right
-          C.slideshow.showNextCard(); 
+          C.slideshow.showNextCard();
           break;
         case 40:// Down
           C.slideshow.showNextCard();
@@ -270,19 +270,19 @@ var SCRULLO = (function($){
     });
 	}
 
-	/* 
+	/*
 	-------------------------------------------------------
-	Private methods 
+	Private methods
 	-------------------------------------------------------
 	*/
-	
 
-	/* 
+
+	/*
 	-------------------------------------------------------
-	Public methods 
+	Public methods
 	-------------------------------------------------------
 	*/
-	
+
 
 	/**
 	 *  @method
@@ -292,62 +292,63 @@ var SCRULLO = (function($){
 	 */
 	C.renderCardNumberAndPointBadge = function () {
     $('.list-card').each(function(){
-			
+
   		//Check if there is already cards
   		if($('.sc-card-number', this).length > 0){
         return true;//continue
   		}
-  
+
   		//Get card number and points
   		var card = $(this),
   		cardNumber = card.find('.list-card-title span').text(),
   		points = card.find('.list-card-title').text();
-  			
+
   		var regEx = /\(\d+[\.|,]?\d*\)/;
-  		if(!$.isEmpty(points)) {	
+  		if(!$.isEmpty(points)) {
         points = points.match(regEx) + '';
-        if(!$.isEmpty(points)) {	
-  
+        if(!$.isEmpty(points)) {
+
           //Format points
           points = points.match(/\d+[\.|,]?\d*/);
           var pointBadge = C.pointBadge.createPointBadge(points);
-  
+
           //Append points to badges
           var badges = $(this).find('.badges');
           badges.prepend(pointBadge);
         }
   		}
-  			
+
   		//Create elements
   		var cardNumberElement = $('<span class=\'sc-card-number\'>'+cardNumber+' </span>')[0];
   		//Add card number to paragraph
   		var p = $(this).find('.list-card-title');
   		p.prepend(cardNumberElement);
-  		
+
     });
 	}
-        
+
   /**
    *  Render all tickets points
    */
   C.renderTotalListPoints = function () {
     $('.list').each(function() {
-        
-       //Check if there is already cards
-       if($('.sc-sum-points', this).length > 0){
-         return true;//continue
-       }
-       var sum = 0;
-       $('.badge.point-badge', this).each(function(){
-          var points = $(this).text();
-          points = parseFloat(points.replace('p', ''));
-          sum += points;
-       });
-       
-       var sumElement = $('<div class=\'sc-sum-points\'>'+sum+'</div>')[0];
-       $('.list-title', this).append(sumElement);
-       
-       C.setAppIconImage(this);
+
+      //Check if there is already cards
+      if(!$('.sc-sum-points', this).length){
+        var sumElement = $('<div class=\'sc-sum-points\'></div>')[0];
+        $('.list-title', this).append(sumElement);
+      } else {
+        var sumElement = $('.sc-sum-points', this)[0];
+      }
+      var sum = 0;
+      $('.badge.point-badge', this).each(function(){
+        var points = $(this).text();
+        points = parseFloat(points.replace('p', ''));
+        sum += points;
+      });
+
+      sumElement.innerHTML = sum;
+
     });
   }
 
@@ -355,7 +356,7 @@ var SCRULLO = (function($){
 	 * 	@method
 	 *    checkBoardURL, check if we are in a board right now
 	 *	@result
-	 * 	  BOOL 
+	 * 	  BOOL
 	 */
 	C.checkBoardURL = function() {
     var regEx = /^https:\/\/trello.com\/board/;
@@ -366,7 +367,7 @@ var SCRULLO = (function($){
 	/**
 	 * 	@method
 	 *    wrapBody, Wrap the body of the board page
-	 *	@result BOOL or void 
+	 *	@result BOOL or void
 	 */
 	C.wrapBody = function() {
 
@@ -379,12 +380,12 @@ var SCRULLO = (function($){
     $(document.body).prepend(perspectiveWrapper);
     $(wrapper).append($('#surface'));
 	}
-	
-	
+
+
 	/**
    *  @public method
-   *    Sets the app icon 
-   *  @result void 
+   *    Sets the app icon
+   *  @result void
    */
 	C.setAppIconImage = function(context) {
 	  $('.small-icon.list-icon', context).css({
@@ -414,7 +415,7 @@ var SCRULLO = (function($){
 	 *  @method
 	 *   prependSlideShow, Prepends a slideshow to the wrapper of the body
 	 *  @result
-	 *   BOOL or void 
+	 *   BOOL or void
 	 */
 	C.prependSlideShow = function () {
 
@@ -429,33 +430,33 @@ var SCRULLO = (function($){
 	/**
 	 *  @method
 	 *    renderLayout, render the layout of the slideshow
-	 *  @result 
+	 *  @result
 	 *    BOOL or void
 	 */
 	C.renderLayout = function() {
 		if($('#sc-body').length > 0){
 			return false;
 		}
-                
+
     clearInterval(INTERVAL_REFERENCE);
-                
+
     // Body
 		var body = $('<div id=\'sc-body\'></div>')[0];
 		$(SLIDE_SHOW_ELEMENT).append(body);
     INITIAL_BODY_WIDTH = $(body).width();
     BODY_HEIGHT = $(window).height();
-    
+
     // Ticket
     C.ticket = $('<div id=\'sc-ticket\'></div>')[0];
     $(C.ticket).css('top', window.innerHeight * 0.3);
 		$(body).append(C.ticket);
-		
+
     // Helper animation
     C.topHelperAnimation = $('<div id=\'sc-top-helper-animation\' class=\'helper-animation\'></div>')[0];
     $(body).append(C.topHelperAnimation);
     C.bottomHelperAnimation = $('<div id=\'sc-bottom-helper-animation\' class=\'helper-animation\'></div>')[0];
     $(body).append(C.bottomHelperAnimation);
-    
+
     // Buttons
     C.leftBtn = $('<div id=\'sc-left-btn\'></div>')[0];
 		$(body).append(C.leftBtn);
@@ -465,13 +466,13 @@ var SCRULLO = (function($){
 		$(C.rightBtn).click(C.slideshow.showNextCard);
 		C.ticketList = $('<ul id=\'sc-ticket-list\'></ul>')[0];
 		$(body).append(C.ticketList);
-                
+
     // Exit button
 		C.exitBtn = $('<img id=\'sc-exit-btn\'></img>')[0]
 		C.exitBtn.src = chrome.extension.getURL('/resources/images/exit-btn.png');
 		$(C.exitBtn).click(C.slideshow.exit);
 		$(SLIDE_SHOW_ELEMENT).append(C.exitBtn);
-		
+
 		//Unbind for performance
 		$('.list-icon').unbind();
 	}
@@ -480,11 +481,11 @@ var SCRULLO = (function($){
 	/**
 	 *  @method getTitle, gets the title of a card
 	 *  @param card
-	 *  @result 
+	 *  @result
 	 *    string title
 	 */
 	C.getTitle = function(card){
-		
+
     var title = $(card).find('.list-card-title').text(),
     removalOfPointsRegEx = /(#\d+)/g,
     pointsRegEx = /#\d+/,
@@ -498,7 +499,7 @@ var SCRULLO = (function($){
 	 *  @method
 	 *      createList, gets the title of a card
 	 *  @param listNumber
-	 *  @result 
+	 *  @result
 	 *      void
 	 */
 	C.createList = function(listNumber) {
@@ -510,7 +511,7 @@ var SCRULLO = (function($){
 			.click(function(){
 				C.slideshow.showCard(this);
 			});
-			
+
 			// Show first card
 			if(n == 0)
 				C.slideshow.showCard(listCard);
@@ -519,21 +520,21 @@ var SCRULLO = (function($){
 		MAX_INDEX = n;
 
 		//Remove list for performance
-		setTimeout(function () { 
+		setTimeout(function () {
 			$('.list').remove();
 		}, 0);
-		
+
 	}
-	
+
 
 	/**
 	 *  @method
 	 *      attachSlideshowHandler, attach slideshowhandler
-	 *  @result 
+	 *  @result
 	 *      void
 	 */
 	C.attachSlideshowHandler = function() {
-		
+
 		var n = -1;
 		$('.list-icon').each(function() {
 			$(this).click(function(){
@@ -545,7 +546,7 @@ var SCRULLO = (function($){
 			n++;
 		});
 	}
-	
+
 
 	// Dont touch this!
 	C.constructor();
